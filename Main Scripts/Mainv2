@@ -1,1 +1,125 @@
+repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
+
+local Player = game.Players.LocalPlayer
+local HttpService = game:GetService("HttpService")
+
+
+local UserKey = getgenv().Key or ""
+if UserKey == "" or UserKey == "PASTE_KEY_HERE" then
+    Player:Kick("\n[KEY] Lỗi 101\nBạn chưa nhập key!")
+    return
+end
+
+
+local function getIP()
+    local ok, ip = pcall(function()
+        return game:HttpGet("https://api.ipify.org")
+    end)
+    return ok and ip or "unknown"
+end
+
+local UserIP = getIP()
+
+
+local SERVER_URL = "https://notevn.com/raw/sj2ud6ze"
+
+
+local function request(url)
+    local ok, res = pcall(function()
+        return game:HttpGet(url)
+    end)
+
+    if not ok then return { success = false } end
+
+    local success, data = pcall(function()
+        return HttpService:JSONDecode(res)
+    end)
+
+    if not success then return { success = false } end
+
+    return data
+end
+
+-- Check KEY
+local check = request(SERVER_URL .. "?action=check&key=" .. UserKey .. "&ip=" .. UserIP)
+
+if not check or not check.success then
+    Player:Kick("\n[KEY] Error 105: Server is not responding")
+    return
+end
+
+if check.status == "invalid" then
+    Player:Kick("\n[KEY] Error 139\nInvalid key!")
+    return
+end
+
+if check.status == "used_on_another_ip" then
+    Player:Kick("\n[KEY] Error 132\nKey already used on another IP!\nIP hiện tại: " .. UserIP)
+    return
+end
+
+if check.status == "already_in_use" then
+    Player:Kick("\n[KEY] Error 128\nKey leaked or used in 2 places!")
+    return
+end
+
+
+if check.status == "ok" then
+    if check.first_time then
+        
+        local gui = Instance.new("ScreenGui", game.CoreGui)
+        local frame = Instance.new("Frame", gui)
+        frame.Size = UDim2.new(0, 380, 0, 220)
+        frame.Position = UDim2.new(0.5, -190, 0.5, -110)
+        frame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+        frame.BorderColor3 = Color3.fromRGB(255, 60, 60)
+
+        local title = Instance.new("TextLabel", frame)
+        title.Text = "FIRST TIME USE KEY"
+        title.TextColor3 = Color3.fromRGB(255, 80, 80)
+        title.Size = UDim2.new(1, 0, 0, 35)
+        title.BackgroundTransparency = 1
+        title.Font = Enum.Font.GothamBold
+        title.TextSize = 20
+
+        local info = Instance.new("TextLabel", frame)
+        info.Text = "Your IP: " .. UserIP .. "\n\nDo you want to LOCK KEY to this IP?\n(What to Do to Avoid Losing the Key)"
+        info.TextColor3 = Color3.new(1, 1, 1)
+        info.BackgroundTransparency = 1
+        info.Position = UDim2.new(0, 10, 0, 45)
+        info.Size = UDim2.new(1, -20, 0, 110)
+        info.TextWrapped = true
+        info.TextSize = 15
+
+        local yes = Instance.new("TextButton", frame)
+        yes.Size = UDim2.new(0, 150, 0, 45)
+        yes.Position = UDim2.new(0, 20, 1, -60)
+        yes.BackgroundColor3 = Color3.fromRGB(0, 180, 0)
+        yes.Text = "CÓ - KHÓA IP"
+        yes.TextColor3 = Color3.new(1, 1, 1)
+        yes.Font = Enum.Font.GothamBold
+
+        yes.MouseButton1Click:Connect(function()
+            game:HttpGet(SERVER_URL .. "?action=bind&key=" .. UserKey .. "&ip=" .. UserIP, true)
+            gui:Destroy()
+            loadstring(game:HttpGet("Soon --------------- main "))()
+        end)
+
+        local no = Instance.new("TextButton", frame)
+        no.Size = UDim2.new(0, 150, 0, 45)
+        no.Position = UDim2.new(1, -170, 1, -60)
+        no.BackgroundColor3 = Color3.fromRGB(180, 0, 0)
+        no.Text = "KHÔNG"
+        no.TextColor3 = Color3.new(1, 1, 1)
+        no.Font = Enum.Font.GothamBold
+
+        no.MouseButton1Click:Connect(function()
+            gui:Destroy()
+            loadstring(game:HttpGet("Soon ---------- main"))()
+        end)
+
+    else
+        loadstring(game:HttpGet("Soon ----------- main"))()
+    end
+end
 
