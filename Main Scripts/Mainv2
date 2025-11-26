@@ -102,7 +102,7 @@ if check.status == "ok" then
         yes.MouseButton1Click:Connect(function()
             game:HttpGet(SERVER_URL .. "?action=bind&key=" .. UserKey .. "&ip=" .. UserIP, true)
             gui:Destroy()
-            loadstring(game:HttpGet("Soon --------------- main "))()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/karedskibidi/ThieenHuB/refs/heads/main/BloxFruits/Premium/LXY"))()
         end)
 
         local no = Instance.new("TextButton", frame)
@@ -115,11 +115,11 @@ if check.status == "ok" then
 
         no.MouseButton1Click:Connect(function()
             gui:Destroy()
-            loadstring(game:HttpGet("Soon ---------- main"))()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/karedskibidi/ThieenHuB/refs/heads/main/BloxFruits/Premium/LXY"))()
         end)
 
     else
-        loadstring(game:HttpGet("Soon ----------- main"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/karedskibidi/ThieenHuB/refs/heads/main/BloxFruits/Premium/LXY"))()
     end
 end
 
